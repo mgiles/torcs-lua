@@ -4,17 +4,18 @@ static tdble getNumberField(lua_State *L, const char *field, tdble def);
 static int getIntField(lua_State *L, const char *field, int def);
 
 void initTorcs(lua_State *L) {
-  // Register the "torcs" functions for Lua
-  luaL_register(L, "torcs", torcs_functions);
 
-  // Set the dispatch function for field access
-  // on torcsState userdata
-  luaL_newmetatable(L, "torcs.state");
-  lua_pushstring(L, "__index");
-  lua_pushcfunction(L, tl_lookupField);
-  lua_settable(L, -3);
+  // Set up the field access metatables
+  int i = 0;
+  while (dispatchers[i].name != NULL) {
+    luaL_newmetatable(L, dispatchers[i].name);
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, dispatchers[i].func);
+    lua_settable(L, -3);
+    lua_pop(L, 1); // Metatable already in registry
 
-  lua_pop(L, 1); // Metatable already in registry from newmetatable
+    i++;
+  }
 }
 
 lua_State *initLua() {
@@ -45,10 +46,13 @@ void closeLua(lua_State *L) {
 void tl_drive(lua_State *L, tCarElt *car) {
   lua_getglobal(L, "drive");
 
-  // Wrap car in a torcsState value
-  lua_pushcfunction(L, tl_newTorcsState);
-  lua_pushlightuserdata(L, car);
-  lua_call(L, 1, 1);
+  // Wrap car in a tl_CarElt value
+  tl_CarElt *wrapper = (tl_CarElt *) lua_newuserdata(L, sizeof(tl_CarElt));
+  wrapper->wrapped = car;
+
+  // Set its field access metatable (defined in initTorcs)
+  luaL_getmetatable(L, "torcs.CarElt");
+  lua_setmetatable(L, -2);
 
   // Call drive
   lua_call(L, 1, 1);

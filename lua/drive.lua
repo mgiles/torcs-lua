@@ -3,12 +3,12 @@ function drive (car)
 end
 
 function getGear (car)
-  local gear = car.gear
-  local max = car.gearNb
+  local gear = car.priv.gear
+  local max = car.priv.gearNb
 
   if gear <= 0 then
     return 1
-  elseif gear < max and car.enginerpm >= car.enginerpmRedLine then
+  elseif gear < max and car.priv.enginerpm >= car.priv.enginerpmRedLine then
     return gear + 1
   else
     return gear
