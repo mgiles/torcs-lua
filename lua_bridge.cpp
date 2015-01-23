@@ -4,6 +4,9 @@ static tdble getNumberField(lua_State *L, const char *field, tdble def);
 static int getIntField(lua_State *L, const char *field, int def);
 
 void initTorcs(lua_State *L) {
+  // Set up top-level functions
+  luaL_register(L, "torcs", tl_functions);
+  lua_pop(L, 1); // "torcs" table registered, don't need it
 
   // Set up the field access metatables
   int i = 0;

@@ -67,6 +67,19 @@
     return 1; \
   }
 
+// Same as structGetter, but the contained struct is referenced rather than directly
+// included
+// s->FIELD instead of &(s->FIELD)
+#define structGetterP(TYPE, FIELD_TYPE, FIELD) \
+  int f_##TYPE##_##FIELD(lua_State *L, t##TYPE *s) { \
+    tl_##FIELD_TYPE *wrapper = (tl_##FIELD_TYPE *) lua_newuserdata(L, sizeof(tl_##FIELD_TYPE)); \
+    wrapper->wrapped = s->FIELD; \
+    \
+    luaL_getmetatable(L, "torcs." #FIELD_TYPE); \
+    lua_setmetatable(L, -2); \
+    return 1; \
+  }
+
 /** Generic helpers **/
 
 static void missingFieldError(lua_State *L, const char *field) {
@@ -78,6 +91,14 @@ static void missingFieldError(lua_State *L, const char *field) {
   lua_error(L);
 }
 
+/** Top-level functions **/
+int tl_RtTrackSideTgAngleL(lua_State *L) {
+  tl_TrkLocPos *wrapper = (tl_TrkLocPos*) luaL_checkudata(L, 1, "torcs.TrkLocPos");
+  tTrkLocPos *pos = wrapper->wrapped;
+  tdble res = RtTrackSideTgAngleL(pos);
+  lua_pushnumber(L, res);
+  return 1;
+}
 
 /** tCarElt **/
 
@@ -87,6 +108,7 @@ getter(CarElt, index, integer)
 
 structGetter(CarElt, InitCar, info)
 structGetter(CarElt, PrivCar, priv)
+structGetter(CarElt, PublicCar, pub)
 
 /** tInitCar **/
 
@@ -144,3 +166,46 @@ getter(PrivCar, smoke, number)
 getter(PrivCar, dammage, integer)
 getter(PrivCar, debug, integer)
 //int f_PrivCar_collision_state(lua_State *L, tPrivCar *priv);
+
+/** tPublicCar **/
+dispatch(PublicCar)
+
+structGetter(PublicCar, DynPt, DynGC)
+structGetter(PublicCar, DynPt, DynGCg)
+getter(PublicCar, speed, number)
+//int f_PublicCar_posMat(lua_State *L, tPublicCar *pub);
+structGetter(PublicCar, TrkLocPos, trkPos)
+getter(PublicCar, state, integer)
+//int f_PublicCar_corner(lua_State *L, tPublicCar *pub);
+
+/** tTrkLocPos **/
+dispatch(TrkLocPos)
+
+structGetterP(TrkLocPos, TrackSeg, seg)
+getter(TrkLocPos, type, integer)
+getter(TrkLocPos, toStart, number)
+getter(TrkLocPos, toRight, number)
+getter(TrkLocPos, toMiddle, number)
+getter(TrkLocPos, toLeft, number)
+
+/** tTrackSeg **/
+dispatch(TrackSeg)
+
+getter(TrackSeg, width, number)
+
+/** tPosd **/
+dispatch(Posd)
+
+getter(Posd, x, number)
+getter(Posd, y, number)
+getter(Posd, z, number)
+getter(Posd, ax, number)
+getter(Posd, ay, number)
+getter(Posd, az, number)
+
+/** tDynPt **/
+dispatch(DynPt)
+
+structGetter(DynPt, Posd, pos);
+structGetter(DynPt, Posd, vel);
+structGetter(DynPt, Posd, acc);

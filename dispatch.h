@@ -3,6 +3,16 @@
 #include <lualib.h>
 
 #include <car.h>
+#include <robottools.h>
+
+/** top-level functions **/
+
+int tl_RtTrackSideTgAngleL(lua_State *L);
+
+const luaL_Reg tl_functions[] = {
+  {"RtTrackSideTgAngleL", tl_RtTrackSideTgAngleL},
+  {NULL, NULL}
+};
 
 /** userdata definitions **/
 typedef struct {
@@ -13,11 +23,11 @@ typedef struct {
   tInitCar *wrapped;
 } tl_InitCar;
 
-/*
 typedef struct {
   tPublicCar *wrapped;
 } tl_PublicCar;
 
+/*
 typedef struct {
   tCarRaceInfo *wrapped;
 } tl_CarRaceInfo;
@@ -33,6 +43,22 @@ typedef struct {
 } tl_CarPitCmd;
 */
 
+typedef struct {
+  tTrkLocPos *wrapped;
+} tl_TrkLocPos;
+
+typedef struct {
+  tTrackSeg *wrapped;
+} tl_TrackSeg;
+
+typedef struct {
+  tPosd *wrapped;
+} tl_Posd;
+
+typedef struct {
+  tDynPt *wrapped;
+} tl_DynPt;
+
 
 /** Getters for tCarElt **/
 int dispatch_CarElt(lua_State *L);
@@ -40,8 +66,8 @@ int dispatch_CarElt(lua_State *L);
 int f_CarElt_index(lua_State *L, tCarElt *car);
 int f_CarElt_info(lua_State *L, tCarElt *car);
 int f_CarElt_priv(lua_State *L, tCarElt *car);
+int f_CarElt_pub(lua_State *L, tCarElt *car);
 //int f_CarElt_race(lua_State *L, tCarElt *car);
-//int f_CarElt_priv(lua_State *L, tCarElt *car);
 //int f_CarElt_ctrl(lua_State *L, tCarElt *car);
 //int f_CarElt_pitcmd(lua_State *L, tCarElt *car);
 
@@ -96,11 +122,59 @@ int f_PrivCar_dammage(lua_State *L, tPrivCar *priv);
 int f_PrivCar_debug(lua_State *L, tPrivCar *priv);
 //int f_PrivCar_collision_state(lua_State *L, tPrivCar *priv);
 
+/** Getters for tPublicCar **/
+int dispatch_PublicCar(lua_State *L);
+
+int f_PublicCar_DynGC(lua_State *L, tPublicCar *pub);
+int f_PublicCar_DynGCg(lua_State *L, tPublicCar *pub);
+int f_PublicCar_speed(lua_State *L, tPublicCar *pub);
+//int f_PublicCar_posMat(lua_State *L, tPublicCar *pub);
+int f_PublicCar_trkPos(lua_State *L, tPublicCar *pub);
+int f_PublicCar_state(lua_State *L, tPublicCar *pub);
+//int f_PublicCar_corner(lua_State *L, tPublicCar *pub);
+
+/** Getters for tTrkLocPos **/
+int dispatch_TrkLocPos(lua_State *L);
+
+int f_TrkLocPos_seg(lua_State *L, tTrkLocPos *pos);
+int f_TrkLocPos_type(lua_State *L, tTrkLocPos *pos);
+int f_TrkLocPos_toStart(lua_State *L, tTrkLocPos *pos);
+int f_TrkLocPos_toRight(lua_State *L, tTrkLocPos *pos);
+int f_TrkLocPos_toMiddle(lua_State *L, tTrkLocPos *pos);
+int f_TrkLocPos_toLeft(lua_State *L, tTrkLocPos *pos);
+
+/** Getters for tTrackSeg **/
+int dispatch_TrackSeg(lua_State *L);
+
+int f_TrackSeg_width(lua_State *L, tTrackSeg *seg);
+
+/** Getters for tPosd **/
+int dispatch_Posd(lua_State *L);
+
+int f_Posd_x(lua_State *L, tPosd *pos);
+int f_Posd_y(lua_State *L, tPosd *pos);
+int f_Posd_z(lua_State *L, tPosd *pos);
+int f_Posd_ax(lua_State *L, tPosd *pos);
+int f_Posd_ay(lua_State *L, tPosd *pos);
+int f_Posd_az(lua_State *L, tPosd *pos);
+
+/** Getters for tDynPt **/
+int dispatch_DynPt(lua_State *L);
+
+int f_DynPt_pos(lua_State *L, tDynPt *pt);
+int f_DynPt_vel(lua_State *L, tDynPt *pt);
+int f_DynPt_acc(lua_State *L, tDynPt *pt);
+
 /** Struct dispatch functions **/
 const luaL_Reg dispatchers[] = {
   {"torcs.CarElt", dispatch_CarElt},
   {"torcs.InitCar", dispatch_InitCar},
   {"torcs.PrivCar", dispatch_PrivCar},
+  {"torcs.PublicCar", dispatch_PublicCar},
+  {"torcs.TrkLocPos", dispatch_TrkLocPos},
+  {"torcs.TrackSeg", dispatch_TrackSeg},
+  {"torcs.Posd", dispatch_Posd},
+  {"torcs.DynPt", dispatch_DynPt},
   {NULL, NULL}
 };
 
@@ -115,9 +189,9 @@ typedef struct {
 const getterEntry_CarElt fields_CarElt[] = {
   {"index", f_CarElt_index},
   {"info", f_CarElt_info},
-  {"priv", f_CarElt_priv},
+  {"pub", f_CarElt_pub},
   //  {"race", f_CarElt_race},
-  //  {"priv", f_CarElt_priv},
+  {"priv", f_CarElt_priv},
   //  {"ctrl", f_CarElt_ctrl},
   //  {"pitcmd", f_CarElt_pitcmd},
   {NULL, NULL}
@@ -187,5 +261,88 @@ const getterEntry_PrivCar fields_PrivCar[] = {
   {"dammage", f_PrivCar_dammage},
   {"debug", f_PrivCar_debug},
   //  {"collision", f_PrivCar_collision_state},
+  {NULL, NULL}
+};
+
+
+typedef int (*getter_PublicCar) (lua_State *L, tPublicCar *pub);
+
+typedef struct {
+  const char *name;
+  getter_PublicCar getter;
+} getterEntry_PublicCar;
+
+const getterEntry_PublicCar fields_PublicCar[] = {
+  {"DynGC", f_PublicCar_DynGC},
+  {"DynGCg", f_PublicCar_DynGCg},
+  {"speed", f_PublicCar_speed},
+  //  {"posMat", f_PublicCar_posMat},
+  {"trkPos", f_PublicCar_trkPos},
+  {"state", f_PublicCar_state},
+  //  {"corner", f_PublicCar_corner},
+  {NULL, NULL}
+};
+
+
+typedef int (*getter_TrkLocPos) (lua_State *L, tTrkLocPos *pos);
+
+typedef struct {
+  const char *name;
+  getter_TrkLocPos getter;
+} getterEntry_TrkLocPos;
+
+const getterEntry_TrkLocPos fields_TrkLocPos[] = {
+  {"seg", f_TrkLocPos_seg},
+  {"type", f_TrkLocPos_type},
+  {"toStart", f_TrkLocPos_toStart},
+  {"toRight", f_TrkLocPos_toRight},
+  {"toMiddle", f_TrkLocPos_toMiddle},
+  {"toLeft", f_TrkLocPos_toLeft},
+  {NULL, NULL}
+};
+
+
+typedef int (*getter_TrackSeg) (lua_State *L, tTrackSeg *seg);
+
+typedef struct {
+  const char *name;
+  getter_TrackSeg getter;
+} getterEntry_TrackSeg;
+
+const getterEntry_TrackSeg fields_TrackSeg[] = {
+  {"width", f_TrackSeg_width},
+  {NULL, NULL}
+};
+
+
+typedef int (*getter_Posd) (lua_State *L, tPosd *pos);
+
+typedef struct {
+  const char *name;
+  getter_Posd getter;
+} getterEntry_Posd;
+
+const getterEntry_Posd fields_Posd[] = {
+  {"x", f_Posd_x},
+  {"y", f_Posd_y},
+  {"z", f_Posd_z},
+  {"ax", f_Posd_ax},
+  {"ay", f_Posd_ay},
+  {"az", f_Posd_az},
+  {NULL, NULL}
+};
+
+
+typedef int (*getter_DynPt) (lua_State *L, tDynPt *pt);
+
+typedef struct {
+  const char *name;
+  getter_DynPt getter;
+} getterEntry_DynPt;
+
+const getterEntry_DynPt fields_DynPt[] = {
+  {"pos", f_DynPt_pos},
+  {"vel", f_DynPt_vel},
+  {"acc", f_DynPt_acc},
   {NULL, NULL}
 };
