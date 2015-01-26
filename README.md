@@ -35,6 +35,8 @@ The path to the main Lua script (`drive.lua` by default) is set in `lua_bridge.c
 
 ## Bindings
 
+The bindings are generated based off the JSON file in "gen/model.json". You can find some information about the bindings themselves in "gen/README.md", but here's a quick overview of how to use them:
+
 You can find the set of currently implemented bindings in `dispatch.h`. Look at the `fields_*` arrays in that file to find the field names that can be accessed from Lua for the given type. The conventions that the bindings follow are explained in `dispatch.cpp`, where the actual bindings are defined.
 
 The following Lua code is included in the sample, under `lua/drive.lua`, and demonstrates how field access works:
