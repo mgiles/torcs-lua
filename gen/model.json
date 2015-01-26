@@ -1,0 +1,211 @@
+{
+  "structs": [
+      { "name": "CarElt",
+        "fields": [
+            {"name": "index", "type": "integer"},
+            {"name": "info", "type": "InitCar"},
+            {"name": "pub", "type": "PublicCar"},
+            {"name": "race", "type": "CarRaceInfo", "ignore": true},
+            {"name": "priv", "type": "PrivCar" }
+        ]
+      },
+      { "name": "InitCar",
+        "fields": [
+            {"name": "name", "type": "string"},
+            {"name": "teamname", "type": "string"},
+            {"name": "carName", "type": "string"},
+            {"name": "category", "type": "string"},
+            {"name": "raceNumber", "type": "integer"},
+            {"name": "startRank", "type": "integer"},
+            {"name": "driverType", "type": "integer"},
+            {"name": "skillLevel", "type": "integer"},
+            {"name": "iconColor", "type": "array", "elemType": "number", "length": 3},
+            {"name": "dimension", "type": "3Dd"},
+            {"name": "drvPos", "type": "3Dd"},
+            {"name": "bonnetPos", "type": "3Dd"},
+            {"name": "tank", "type": "number"},
+            {"name": "steerLock", "type": "number"},
+            {"name": "statGC", "type": "3Dd"},
+            {"name": "wheel", "type": "array", "elemType": "WheelSpec", "length": 4},
+            {"name": "visualAttr", "type": "VisualAttributes"}
+        ]
+      },
+      { "name": "VisualAttributes",
+        "fields": [
+            {"name": "exhaustNb", "type": "integer"},
+            {"name": "exhaustPos", "type": "array", "elemType": "3Dd", "length": 2},
+            {"name": "exhaustPower", "type": "number"}
+        ]
+      },
+      { "name": "PublicCar",
+        "fields": [
+            {"name": "DynGC", "type": "DynPt"},
+            {"name": "DynGCg", "type": "DynPt"},
+            {"name": "speed", "type": "number"},
+            {"name": "posMat", "type": "array", "elemType": "float", "length": 16, "ignore": true},
+            {"name": "trkPos", "type": "TrkLocPos"},
+            {"name": "state", "type": "integer"},
+            {"name": "corner", "type": "array", "elemType": "Posd", "length": 4}
+        ]
+      },
+      { "name": "PrivCar",
+        "fields": [
+            {"name": "driverIndex", "type": "integer"},
+            {"name": "modName", "type": "string"},
+            {"name": "wheel", "type": "array", "elemType": "WheelState", "length": 4},
+            {"name": "corner", "type": "array", "elemType": "Posd", "length": 4},
+            {"name": "gear", "type": "integer"},
+            {"name": "fuel", "type": "number"},
+            {"name": "enginerpm", "type": "number"},
+            {"name": "enginerpmRedLine", "type": "number"},
+            {"name": "enginerpmMax", "type": "number"},
+            {"name": "enginerpmMaxTq", "type": "number"},
+            {"name": "enginerpmMaxPw", "type": "number"},
+            {"name": "engineMaxTq", "type": "number"},
+            {"name": "engineMaxPw", "type": "number"},
+            {"name": "gearRatio", "type": "array", "elemType": "number", "length": 10},
+            {"name": "gearNb", "type": "integer"},
+            {"name": "gearOffset", "type": "integer"},
+            {"name": "skid", "type": "array", "elemType": "number", "length": 4},
+            {"name": "reaction", "type": "array", "elemType": "number", "length": 4},
+            {"name": "collision", "type": "integer"},
+            {"name": "simcollision", "type": "integer"},
+            {"name": "smoke", "type": "number"},
+            {"name": "normal", "type": "3Dd"},
+            {"name": "collpos", "type": "3Dd"},
+            {"name": "dammage", "type": "integer"},
+            {"name": "debug", "type": "integer"},
+            {"name": "collision_state", "type": "CollisionState"}
+        ]
+      },
+      { "name": "CollisionState",
+        "fields": [
+            {"name": "collision_count", "type": "integer"},
+            {"name": "pos", "type": "array", "elemType": "number", "length": 3},
+            {"name": "force", "type": "array", "elemType": "number", "length": 3}
+        ]
+      },
+      { "name": "WheelSpec",
+        "fields": [
+            {"name": "rimRadius", "type": "number"},
+            {"name": "tireHeight", "type": "number"},
+            {"name": "tireWidth", "type": "number"},
+            {"name": "brakeDiskRadius", "type": "number"},
+            {"name": "wheelRadius", "type": "number"}
+        ]
+      },
+      { "name": "WheelState",
+        "fields": [
+            {"name": "relPos", "type": "Posd"},
+            {"name": "spinVel", "type": "number"},
+            {"name": "brakeTemp", "type": "number"},
+            {"name": "state", "type": "integer"},
+            {"name": "seg", "type": "pointer", "targetType": "TrackSeg"},
+            {"name": "rollRes", "type": "number"},
+            {"name": "temp_in ", "type": "number"},
+            {"name": "temp_mid", "type": "number"},
+            {"name": "temp_out", "type": "number"},
+            {"name": "condition", "type": "number"},
+            {"name": "slipSide", "type": "number"},
+            {"name": "slipAccel", "type": "number"},
+            {"name": "Fx", "type": "number"},
+            {"name": "Fy", "type": "number"},
+            {"name": "Fz", "type": "number"}
+        ]
+      },
+      { "name": "TrkLocPos",
+        "fields": [
+            {"name": "seg", "type": "pointer", "targetType": "TrackSeg"},
+            {"name": "type", "type": "integer"},
+            {"name": "toStart", "type": "number"},
+            {"name": "toRight", "type": "number"},
+            {"name": "toMiddle", "type": "number"},
+            {"name": "toLeft", "type": "number"}
+        ]
+      },
+      { "name": "TrackSeg",
+        "fields": [
+            {"name": "name", "type": "string"},
+            {"name": "id", "type": "integer"},
+            {"name": "type", "type": "integer"},
+            {"name": "type2", "type": "integer"},
+            {"name": "style", "type": "integer"},
+            {"name": "length", "type": "number"},
+            {"name": "width", "type": "number"},
+            {"name": "startWidth", "type": "number"},
+            {"name": "endWidth", "type": "number"},
+            {"name": "lgfromstart", "type": "number"},
+            {"name": "radius", "type": "number"},
+            {"name": "radiusr", "type": "number"},
+            {"name": "radiusl", "type": "number"},
+            {"name": "arc", "type": "number"},
+            {"name": "center", "type": "3Dd"},
+            {"name": "vertex", "type": "array", "elemType": "3Dd", "length": 4},
+            {"name": "angle", "type": "array", "elemType": "number", "length": 7},
+            {"name": "Kzl", "type": "number"},
+            {"name": "Kzw", "type": "number"},
+            {"name": "Kyl", "type": "number"},
+            {"name": "rgtSideNormal", "type": "3Dd"},
+            {"name": "envIndex", "type": "integer"},
+            {"name": "height", "type": "number"},
+            {"name": "raceInfo", "type": "integer"},
+            {"name": "DoVfactor", "type": "number"},
+            {"name": "next", "type": "pointer", "targetType": "TrackSeg"},
+            {"name": "prev", "type": "pointer", "targetType": "TrackSeg"}
+        ]
+      },
+      { "name": "3Dd",
+        "fields": [
+            {"name": "x", "type": "number"},
+            {"name": "y", "type": "number"},
+            {"name": "z", "type": "number"}
+        ]
+      },
+      { "name": "Posd",
+        "fields": [
+            {"name": "x", "type": "number"},
+            {"name": "y", "type": "number"},
+            {"name": "z", "type": "number"},
+            {"name": "ax", "type": "number"},
+            {"name": "ay", "type": "number"},
+            {"name": "az", "type": "number"}
+        ]
+      },
+      { "name": "DynPt",
+        "fields": [
+            {"name": "pos", "type": "Posd"},
+            {"name": "vel", "type": "Posd"},
+            {"name": "acc", "type": "Posd"}
+        ]
+      }
+  ],
+  "ignored": [
+      { "name": "CarRaceInfo",
+        "fields": [
+            {"name": "bestLapTime", "type": "number"},
+            {"name": "commitBestLapTime", "type": "boolean"},
+            {"name": "deltaBestLapTime", "type": "number"},
+            {"name": "curLapTime", "type": "number"},
+            {"name": "lastLapTime", "type": "number"},
+            {"name": "curTime", "type": "number"},
+            {"name": "topSpeed", "type": "number"},
+            {"name": "currentMinSpeedForLap", "type": "number"},
+            {"name": "laps", "type": "integer"},
+            {"name": "nbPitStops", "type": "integer"},
+            {"name": "remainingLaps", "type": "integer"},
+            {"name": "pos", "type": "integer"},
+            {"name": "timeBehindLeader", "type": "number"},
+            {"name": "lapsBehindLeader", "type": "integer"},
+            {"name": "timeBehindPrev", "type": "number"},
+            {"name": "timeBeforeNext", "type": "number"},
+            {"name": "distRaced", "type": "number"},
+            {"name": "distFromStartLine", "type": "number"},
+            {"name": "scheduledEventTime", "type": "number"},
+            {"name": "pit", "type": "pointer", "targetType": "TrackOwnPit", "ignore": true},
+            {"name": "event", "type": "integer"},
+            {"name": "penaltyList", "type": "CarPenaltyHead", "ignore": true},
+            {"name": "penaltyTime", "type": "number"}
+        ]
+      }
+  ]
+}
