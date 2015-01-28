@@ -27,6 +27,7 @@ int dispatch_TrackSeg(lua_State *L);
 int dispatch_3Dd(lua_State *L);
 int dispatch_Posd(lua_State *L);
 int dispatch_DynPt(lua_State *L);
+int dispatch_TrackSurface(lua_State *L);
 
 const luaL_Reg dispatchers[] = {
   {"torcs.CarElt", dispatch_CarElt},
@@ -42,6 +43,7 @@ const luaL_Reg dispatchers[] = {
   {"torcs.3Dd", dispatch_3Dd},
   {"torcs.Posd", dispatch_Posd},
   {"torcs.DynPt", dispatch_DynPt},
+  {"torcs.TrackSurface", dispatch_TrackSurface},
   {NULL, NULL}
 };
 
@@ -408,6 +410,7 @@ int f_TrackSeg_envIndex(lua_State *L, tTrackSeg *wrapped);
 int f_TrackSeg_height(lua_State *L, tTrackSeg *wrapped);
 int f_TrackSeg_raceInfo(lua_State *L, tTrackSeg *wrapped);
 int f_TrackSeg_DoVfactor(lua_State *L, tTrackSeg *wrapped);
+int f_TrackSeg_surface(lua_State *L, tTrackSeg *wrapped);
 int f_TrackSeg_next(lua_State *L, tTrackSeg *wrapped);
 int f_TrackSeg_prev(lua_State *L, tTrackSeg *wrapped);
 
@@ -444,6 +447,7 @@ const getterEntry_TrackSeg fields_TrackSeg[] = {
   {"height", f_TrackSeg_height},
   {"raceInfo", f_TrackSeg_raceInfo},
   {"DoVfactor", f_TrackSeg_DoVfactor},
+  {"surface", f_TrackSeg_surface},
   {"next", f_TrackSeg_next},
   {"prev", f_TrackSeg_prev},
   {NULL, NULL}
@@ -524,6 +528,38 @@ const getterEntry_DynPt fields_DynPt[] = {
   {"pos", f_DynPt_pos},
   {"vel", f_DynPt_vel},
   {"acc", f_DynPt_acc},
+  {NULL, NULL}
+};
+
+/** tTrackSurface **/
+
+typedef struct {
+  tTrackSurface *wrapped;
+} tl_TrackSurface;
+
+int f_TrackSurface_next(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_material(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_kFriction(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_kRebound(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_kRollRes(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_kRoughness(lua_State *L, tTrackSurface *wrapped);
+int f_TrackSurface_kDammage(lua_State *L, tTrackSurface *wrapped);
+
+typedef int (*getter_TrackSurface) (lua_State *L, tTrackSurface *wrapped);
+
+typedef struct {
+  const char *name;
+  getter_TrackSurface getter;
+} getterEntry_TrackSurface;
+
+const getterEntry_TrackSurface fields_TrackSurface[] = {
+  {"next", f_TrackSurface_next},
+  {"material", f_TrackSurface_material},
+  {"kFriction", f_TrackSurface_kFriction},
+  {"kRebound", f_TrackSurface_kRebound},
+  {"kRollRes", f_TrackSurface_kRollRes},
+  {"kRoughness", f_TrackSurface_kRoughness},
+  {"kDammage", f_TrackSurface_kDammage},
   {NULL, NULL}
 };
 

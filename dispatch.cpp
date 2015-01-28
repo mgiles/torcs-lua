@@ -148,7 +148,7 @@ int f_InitCar_iconColor(lua_State *L, tInitCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -210,7 +210,7 @@ int f_InitCar_wheel(lua_State *L, tInitCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_WheelSpec *wrapper = (tl_WheelSpec *) lua_newuserdata(L, sizeof(tl_WheelSpec));
     wrapper->wrapped = &(array[i]);
@@ -270,7 +270,7 @@ int f_VisualAttributes_exhaustPos(lua_State *L, tVisualAttributes *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_3Dd *wrapper = (tl_3Dd *) lua_newuserdata(L, sizeof(tl_3Dd));
     wrapper->wrapped = &(array[i]);
@@ -358,7 +358,7 @@ int f_PublicCar_corner(lua_State *L, tPublicCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_Posd *wrapper = (tl_Posd *) lua_newuserdata(L, sizeof(tl_Posd));
     wrapper->wrapped = &(array[i]);
@@ -414,7 +414,7 @@ int f_PrivCar_wheel(lua_State *L, tPrivCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_WheelState *wrapper = (tl_WheelState *) lua_newuserdata(L, sizeof(tl_WheelState));
     wrapper->wrapped = &(array[i]);
@@ -436,7 +436,7 @@ int f_PrivCar_corner(lua_State *L, tPrivCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_Posd *wrapper = (tl_Posd *) lua_newuserdata(L, sizeof(tl_Posd));
     wrapper->wrapped = &(array[i]);
@@ -503,7 +503,7 @@ int f_PrivCar_gearRatio(lua_State *L, tPrivCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -529,7 +529,7 @@ int f_PrivCar_skid(lua_State *L, tPrivCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -545,7 +545,7 @@ int f_PrivCar_reaction(lua_State *L, tPrivCar *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -642,7 +642,7 @@ int f_CollisionState_pos(lua_State *L, tCollisionState *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -658,7 +658,7 @@ int f_CollisionState_force(lua_State *L, tCollisionState *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -991,7 +991,7 @@ int f_TrackSeg_vertex(lua_State *L, tTrackSeg *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
 
     tl_3Dd *wrapper = (tl_3Dd *) lua_newuserdata(L, sizeof(tl_3Dd));
     wrapper->wrapped = &(array[i]);
@@ -1013,7 +1013,7 @@ int f_TrackSeg_angle(lua_State *L, tTrackSeg *s) {
 
   int i;
   for (i = 0; i < length; i++) {
-    lua_pushinteger(L, i + 1);
+    lua_pushinteger(L, i);
     lua_pushnumber(L, array[i]);
     lua_settable(L, -3);
   }
@@ -1062,6 +1062,15 @@ int f_TrackSeg_raceInfo(lua_State *L, tTrackSeg *s) {
 
 int f_TrackSeg_DoVfactor(lua_State *L, tTrackSeg *s) {
   lua_pushnumber(L, s->DoVfactor);
+  return 1;
+}
+
+int f_TrackSeg_surface(lua_State *L, tTrackSeg *s) {
+  tl_TrackSurface *wrapper = (tl_TrackSurface *) lua_newuserdata(L, sizeof(tl_TrackSurface));
+  wrapper->wrapped = s->surface;
+
+  luaL_getmetatable(L, "torcs.TrackSurface");
+  lua_setmetatable(L, -2);
   return 1;
 }
 
@@ -1224,6 +1233,69 @@ int f_DynPt_acc(lua_State *L, tDynPt *s) {
 
   luaL_getmetatable(L, "torcs.Posd");
   lua_setmetatable(L, -2);
+  return 1;
+}
+
+/** tTrackSurface **/
+
+int dispatch_TrackSurface(lua_State *L) {
+  tl_TrackSurface *wrapper = (tl_TrackSurface *) luaL_checkudata(L, 1, "torcs.TrackSurface");
+  luaL_argcheck(L, wrapper != NULL, 1, "Expected tl_TrackSurface");
+
+  tTrackSurface *wrapped = wrapper->wrapped;
+  const char *field = luaL_checkstring(L, 2);
+
+  getter_TrackSurface f = NULL;
+  int i = 0;
+  while (fields_TrackSurface[i].name != NULL && strcmp(fields_TrackSurface[i].name, field) != 0) {
+    i++;
+  }
+
+  f = fields_TrackSurface[i].getter;
+  if (f != NULL) {
+    return f(L, wrapped);
+  } else {
+    missingFieldError(L, field); // Doesn't return
+    return -1;
+  }
+}
+
+int f_TrackSurface_next(lua_State *L, tTrackSurface *s) {
+  tl_TrackSurface *wrapper = (tl_TrackSurface *) lua_newuserdata(L, sizeof(tl_TrackSurface));
+  wrapper->wrapped = s->next;
+
+  luaL_getmetatable(L, "torcs.TrackSurface");
+  lua_setmetatable(L, -2);
+  return 1;
+}
+
+int f_TrackSurface_material(lua_State *L, tTrackSurface *s) {
+  lua_pushstring(L, s->material);
+  return 1;
+}
+
+int f_TrackSurface_kFriction(lua_State *L, tTrackSurface *s) {
+  lua_pushnumber(L, s->kFriction);
+  return 1;
+}
+
+int f_TrackSurface_kRebound(lua_State *L, tTrackSurface *s) {
+  lua_pushnumber(L, s->kRebound);
+  return 1;
+}
+
+int f_TrackSurface_kRollRes(lua_State *L, tTrackSurface *s) {
+  lua_pushnumber(L, s->kRollRes);
+  return 1;
+}
+
+int f_TrackSurface_kRoughness(lua_State *L, tTrackSurface *s) {
+  lua_pushnumber(L, s->kRoughness);
+  return 1;
+}
+
+int f_TrackSurface_kDammage(lua_State *L, tTrackSurface *s) {
+  lua_pushnumber(L, s->kDammage);
   return 1;
 }
 

@@ -27,19 +27,19 @@ In "dispatch.h" the following code is generated for `InitCar` and the `name` fie
 
 - A wrapper type, `tl_InitCar`, that is used as full userdata when we pass the struct pointer to Lua. This lets us only pass the pointer to Lua (rather than copying the full struct). Wrapping the pointer and passing it as full userdata (rather than directly passing the `tInitCar *` as _light_ userdata) lets us attach a metatable and do field dispatch.
 - A function signature for dispatching `InitCar` fields: `int dispatch_InitCar(lua_State *L);` in this case
-- And entry in the `dispatchers` table: `{"torcs.InitCar", dispatch_InitCar}`. The bridge uses this table to associate userdata with their dispatch tables. The "torcs.InitCar" metatable uses `t_dispatch_InitCar` for its `__index` method. Every time we send a `tl_InitCar` userdata to Lua, it has the "torcs.InitCar" metatable attached.
+- An entry in the `dispatchers` table: `{"torcs.InitCar", dispatch_InitCar}`. The bridge uses this table to associate userdata with their dispatch tables. The "torcs.InitCar" metatable uses `t_dispatch_InitCar` for its `__index` method. Every time we send a `tl_InitCar` userdata to Lua, it has the "torcs.InitCar" metatable attached.
 - Function signatures for each field getter, ex. `int f_InitCar_name(lua_State *L, tInitCar *wrapped);` for the `name` field. These functions return their results on the Lua stack.
 - Two convenience typedefs for creating the dispatch table, `getter_InitCar` and `getterEntry_InitCar`
 - The dispatch table for fields on this struct, `fields_InitCar`. How this works:
   - Say we have a Lua variable called `initCar` that holds a `tl_InitCar` userdata value
   - We access the `name` field: `initCar.name`
-  - The `tl_InitCar` userdata has a metatable whose `__index` method looks up functions in `fields_InitCar`. In this case, "name" is looked up and we get the function `f_InitCar_name`
-  - `f_InitCar_name` is called, given the user state and the `tInitCar *` that `initCar` wraps
+  - The `tl_InitCar` userdata has a metatable whose `__index` method (`dispatch_InitCar`) looks up functions in `fields_InitCar`. In this case, "name" is looked up and we get the function `f_InitCar_name`
+  - `f_InitCar_name` is called, given the Lua state and the `tInitCar *` that `initCar` wraps
   - `f_InitCar_name` looks up the `name` field in the struct and puts the result on the Lua stack
 
-For the same `InitCar` struct and fields, the following is generated in "dispatch.cpp"
+For the same `InitCar` struct and `name` field, the following is generated in "dispatch.cpp"
 
-- The implementation of `dispatch_InitCar`. This function is a Lua-style function and is passed the `tl_InitCar` userdata and the name of the field. It looks up the field in `fields_InitCar` (from "dispatch.h") and calls it to return the correct value.
+- The implementation of `dispatch_InitCar`. This function is a Lua-style function and is passed the `tl_InitCar` userdata and the name of the field (on the Lua stack). It looks up the field in `fields_InitCar` (from "dispatch.h") and calls it to return the correct value.
 - The implementation for each field lookup function. For example, `f_InitCar_name` in this file implements the function that's declared in the header. The body of the lookup function depends on the type of the field being looked up:
   - Primitive fields (ex. `int`, `const *`, `tdble`) are just pushed onto the Lua stack
   - Struct fields (ex. `statGC` in `tInitCar`) are wrapped in their full userdata wrapper and have their metatable attached before being pushed

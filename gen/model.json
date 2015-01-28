@@ -150,6 +150,7 @@
             {"name": "height", "type": "number"},
             {"name": "raceInfo", "type": "integer"},
             {"name": "DoVfactor", "type": "number"},
+            {"name": "surface", "type": "pointer", "targetType": "TrackSurface"},
             {"name": "next", "type": "pointer", "targetType": "TrackSeg"},
             {"name": "prev", "type": "pointer", "targetType": "TrackSeg"}
         ]
@@ -177,6 +178,17 @@
             {"name": "vel", "type": "Posd"},
             {"name": "acc", "type": "Posd"}
         ]
+      },
+      { "name": "TrackSurface",
+        "fields": [
+            {"name": "next", "type": "pointer", "targetType": "TrackSurface"},
+            {"name": "material", "type": "string"},
+            {"name": "kFriction", "type": "number"},
+            {"name": "kRebound", "type": "number"},
+            {"name": "kRollRes", "type": "number"},
+            {"name": "kRoughness", "type": "number"},
+            {"name": "kDammage", "type": "number"}
+        ]
       }
   ],
   "ignored": [
@@ -201,10 +213,20 @@
             {"name": "distRaced", "type": "number"},
             {"name": "distFromStartLine", "type": "number"},
             {"name": "scheduledEventTime", "type": "number"},
-            {"name": "pit", "type": "pointer", "targetType": "TrackOwnPit", "ignore": true},
+            {"name": "pit", "type": "pointer", "targetType": "TrackOwnPit"},
             {"name": "event", "type": "integer"},
             {"name": "penaltyList", "type": "CarPenaltyHead", "ignore": true},
             {"name": "penaltyTime", "type": "number"}
+        ]
+      },
+      { "name": "TrackOwnPit",
+        "fields": [
+            {"name": "pos", "type": "pointer", "targetType": "TrkLocPos"},
+            {"name": "pitCarIndex", "type": "integer"},
+            {"name": "lmin", "type": "number"},
+            {"name": "lmax", "type": "number"},
+            {"name": "freeCarIndex", "type": "integer"},
+            {"name": "car", "type": "array", "elemType": "CarElt", "length": 4}
         ]
       }
   ]
