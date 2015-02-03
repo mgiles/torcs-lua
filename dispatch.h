@@ -14,6 +14,8 @@ const luaL_Reg tl_functions[] = {
   {NULL, NULL}
 };
 
+/** Struct dispatch **/
+
 int dispatch_CarElt(lua_State *L);
 int dispatch_InitCar(lua_State *L);
 int dispatch_VisualAttributes(lua_State *L);

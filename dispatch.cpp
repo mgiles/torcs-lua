@@ -1,4 +1,5 @@
 #include "dispatch.h"
+
 /** Generic helpers **/
 
 static void missingFieldError(lua_State *L, const char *field) {
@@ -18,7 +19,6 @@ int tl_RtTrackSideTgAngleL(lua_State *L) {
   lua_pushnumber(L, res);
   return 1;
 }
-
 
 /** tCarElt **/
 
@@ -75,6 +75,8 @@ int f_CarElt_priv(lua_State *L, tCarElt *s) {
   lua_setmetatable(L, -2);
   return 1;
 }
+
+
 
 /** tInitCar **/
 
@@ -233,6 +235,8 @@ int f_InitCar_visualAttr(lua_State *L, tInitCar *s) {
   return 1;
 }
 
+
+
 /** tVisualAttributes **/
 
 int dispatch_VisualAttributes(lua_State *L) {
@@ -288,6 +292,8 @@ int f_VisualAttributes_exhaustPower(lua_State *L, tVisualAttributes *s) {
   lua_pushnumber(L, s->exhaustPower);
   return 1;
 }
+
+
 
 /** tPublicCar **/
 
@@ -371,6 +377,8 @@ int f_PublicCar_corner(lua_State *L, tPublicCar *s) {
 
   return 1;
 }
+
+
 
 /** tPrivCar **/
 
@@ -605,6 +613,8 @@ int f_PrivCar_collision_state(lua_State *L, tPrivCar *s) {
   return 1;
 }
 
+
+
 /** tCollisionState **/
 
 int dispatch_CollisionState(lua_State *L) {
@@ -666,6 +676,8 @@ int f_CollisionState_force(lua_State *L, tCollisionState *s) {
   return 1;
 }
 
+
+
 /** tWheelSpec **/
 
 int dispatch_WheelSpec(lua_State *L) {
@@ -714,6 +726,8 @@ int f_WheelSpec_wheelRadius(lua_State *L, tWheelSpec *s) {
   lua_pushnumber(L, s->wheelRadius);
   return 1;
 }
+
+
 
 /** tWheelState **/
 
@@ -822,6 +836,8 @@ int f_WheelState_Fz(lua_State *L, tWheelState *s) {
   return 1;
 }
 
+
+
 /** tTrkLocPos **/
 
 int dispatch_TrkLocPos(lua_State *L) {
@@ -879,6 +895,8 @@ int f_TrkLocPos_toLeft(lua_State *L, tTrkLocPos *s) {
   lua_pushnumber(L, s->toLeft);
   return 1;
 }
+
+
 
 /** tTrackSeg **/
 
@@ -1092,6 +1110,8 @@ int f_TrackSeg_prev(lua_State *L, tTrackSeg *s) {
   return 1;
 }
 
+
+
 /** t3Dd **/
 
 int dispatch_3Dd(lua_State *L) {
@@ -1130,6 +1150,8 @@ int f_3Dd_z(lua_State *L, t3Dd *s) {
   lua_pushnumber(L, s->z);
   return 1;
 }
+
+
 
 /** tPosd **/
 
@@ -1185,6 +1207,8 @@ int f_Posd_az(lua_State *L, tPosd *s) {
   return 1;
 }
 
+
+
 /** tDynPt **/
 
 int dispatch_DynPt(lua_State *L) {
@@ -1235,6 +1259,8 @@ int f_DynPt_acc(lua_State *L, tDynPt *s) {
   lua_setmetatable(L, -2);
   return 1;
 }
+
+
 
 /** tTrackSurface **/
 
@@ -1298,4 +1324,6 @@ int f_TrackSurface_kDammage(lua_State *L, tTrackSurface *s) {
   lua_pushnumber(L, s->kDammage);
   return 1;
 }
+
+
 
