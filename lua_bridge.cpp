@@ -58,7 +58,12 @@ void tl_drive(lua_State *L, tCarElt *car) {
   lua_setmetatable(L, -2);
 
   // Call drive
-  lua_call(L, 1, 1);
+  int res = lua_pcall(L, 1, 1, 0);
+  if (res != 0) {
+    const char *error = lua_tostring(L, -1);
+    printf("Error in Lua code: %s\n", error);
+    return;
+  }
 
   car->ctrl.steer = getNumberField(L, "steer", 0.0);
   car->ctrl.accelCmd = getNumberField(L, "accelCmd", 0.0);
